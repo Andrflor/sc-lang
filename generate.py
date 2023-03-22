@@ -114,6 +114,7 @@ MATCH = "match"
 IMPORT = "import"
 MUT = "mut"
 RETURN = "return"
+EOF = "EOF"
 
 SPACE = 32
 

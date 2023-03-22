@@ -4,7 +4,7 @@ main(): void -> int {
 }
 
 
-Dat: type = i32 x f32*;
+Dat: type = i32 * f32;
 a : Dat = 0,0;
 main(): void -> i32 = 0;
 
@@ -13,7 +13,7 @@ main(args): char^ -> i32 {
   args.length;
 }
 
-test(): void => i32 = 0;
+test(): void -> i32 = 0;
 
 
 f(x): i32 -> ?f32 = x == 0 ? null : 1/x;

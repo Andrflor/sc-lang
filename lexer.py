@@ -1,6 +1,6 @@
 import csv
 import sys
-from generate import toks
+from generate import toks, EOF
 
 # Read in the TSV file and construct the state machine
 state_machine = {}
@@ -37,17 +37,23 @@ def recognize_tokens(input_string):
             string_buffer+=char
     return tokens
 
-# Read the filename from the command line argument
-if len(sys.argv) != 2:
-    print("Usage: python lexer.py <filename>")
-    sys.exit(1)
-filename = sys.argv[1]
 
-# Read in the input file and apply the state machine to recognize the tokens
-with open(filename, 'r') as f:
-    input_string = f.read()
-tokens = recognize_tokens(input_string)
+def get_tokens(filename):
+    # Read in the input file and apply the state machine to recognize the tokens
+     with open(filename, 'r') as f:
+        input_string = f.read()
+        return recognize_tokens(input_string) + [[EOF, EOF]]
 
-# Print out the recognized tokens
-for tok in tokens:
-    print(tok[0], tok[1])
+
+if __name__ == "__main__":
+    # Read the filename from the command line argument
+    if len(sys.argv) != 2:
+        print("Usage: python lexer.py <filename>")
+        sys.exit(1)
+    filename = sys.argv[1]
+
+    tokens = get_tokens(filename)
+
+    # Print out the recognized tokens
+    for tok in tokens:
+        print(tok[0], tok[1])
