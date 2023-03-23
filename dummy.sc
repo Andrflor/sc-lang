@@ -1,12 +1,11 @@
+Dat: type = i32 * f32;
+a : Dat = 0,0;
+main(): void -> i32 = 0;
+
 main(): void -> int {
   a: Dat = 0, 0;
   0
 }
-
-
-Dat: type = i32 * f32;
-a : Dat = 0,0;
-main(): void -> i32 = 0;
 
 main(args): char^ -> i32 {
   args |> map;
