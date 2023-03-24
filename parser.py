@@ -43,6 +43,7 @@ def parseType():
     while t[i][1] not in [EQUAL, SEMICOLON, RIGHT_BRACKET, EOF]:
         curtype += t[i][0]
         i+=1
+    print(curtype)
 
 
 def parseMain():
@@ -64,11 +65,9 @@ def parseIdentifier():
 
 def parseFunc():
     global i, t
-    print("Got func")
 
 def parsePipe():
     global i, t
-    print("Got pipe")
 
 def parsePidentifier():
     parseIdentifier()
