@@ -2,7 +2,7 @@ Dat: type = i32 * f32;
 a : Dat = 0,0;
 main(): void -> i32 = 0;
 
-main(): void -> int {
+main(): void -> i32 {
   a: Dat = 0, 0;
   0
 }
@@ -37,7 +37,7 @@ average(nums): f32^ -> f32 =
 reciprocals(nums): i32^ -> (?f32)^ =
   nums |> map((x) = x == 0 ? null : 1.0 / x);
 
-main(argc, argv): i32 * char^ -> int {
+main(argc, argv): i32 * char^ -> i32 {
   n: u32 = argv[1] |> parse_int;
   s: u32 = n |> sum_of_squares;
 
@@ -53,10 +53,10 @@ main(argc, argv): i32 * char^ -> int {
   0
 }
 
-num: type = int | float;
+num: type = i32 | f32;
 morph(T): type -> type = T -> T;
 bimorph(T): type -> type = T * T -> T;
-manymorph(i, T): int * type -> type = T^i -> T;
+manymorph(i, T): i32 * type -> type = T^i -> T;
 anymorph(T): type -> type = T^ -> T;
 
 f(x): morph(num) = x+3;
@@ -82,9 +82,9 @@ main(): void -> i32 {
   0
 }
 
-minmaxgcd: int^ -> int = (min,max)|>gcd;
-minmaxgcd(x): int^ -> int = (x|>min, x|>max)|>gcd;
-minmaxgcd(x): int^ -> int = gcd(min(x), max(x));
+minmaxgcd: i32^ -> i32 = (min,max)|>gcd;
+minmaxgcd(x): i32^ -> i32 = (x|>min, x|>max)|>gcd;
+minmaxgcd(x): i32^ -> i32 = gcd(min(x), max(x));
 
 
 mapping(x, y): type * type -> type = x->y;
@@ -92,7 +92,7 @@ mapping(x, y): type * type -> type = x->y;
 data: type = u8 * (u8 | f32) * u32
 val : data = 0, 0, 0;
 
-type1: type = u8 * value: int * count: int;
-type2: type = f32 * count: int * double;
+type1: type = u8 * value: i32 * count: i32;
+type2: type = f32 * count: i32 * double;
 
-data: type = type1 & type2; // count: int;
+data: type = type1 & type2; // count: i32;

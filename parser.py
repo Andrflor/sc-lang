@@ -17,6 +17,25 @@ params = []
 i = 0
 t = []
 
+
+class Type:
+    def __init__(self, fr, to):
+        self.fr=fr
+        self.to = to
+
+    def get_isMapping(self):
+        return self.fr != NULL
+
+    def get_isType(self):
+        return self.to == TYPE
+
+    def get_isTypeMap(self):
+        return self.isType and self.isMapping
+
+    isType = property(get_isType)
+    isMapping = property(get_isMapping)
+    isTypeMap = property(get_isTypeMap)
+
 class Definition:
     def __init__(self, name, type, value):
         self.type = type
@@ -85,9 +104,9 @@ def parseIdentifier():
         # parse function arguments
     else:
         if cS.inScope(t[i-1][0]) == NULL:
-            raise Exception("Use of undeclared identifier " + t[i-1][0])
+            raise Exception("Use of undeclared identifier `" + t[i-1][0] + "`")
         else:
-            if t[i][1] == "|>":
+            if t[i][1] == PIPE_FORWARD:
                 i+=1
                 parsePipe()
 
@@ -121,5 +140,8 @@ if __name__ == "__main__":
     filename = sys.argv[1]
 
     t = get_tokens(filename)
-    print(t)
-    parse()
+    try:
+        parse()
+    except Exception as e:
+        print("Error:", e)
+
