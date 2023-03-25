@@ -17,12 +17,18 @@ params = []
 i = 0
 t = []
 
+class Definition:
+    def __init__(self, name, type, value):
+        self.type = type
+        self.name = name
+        self.value = value
+        self.scope = cS
+
 class Scope:
     def __init__(self, name, parent):
         self.name = name
         self.parent = parent
         self.children = []
-        self.statements = []
         self.definitions = []
 
     def push(self, name):
@@ -30,12 +36,32 @@ class Scope:
         self.children.append(scope)
         return scope
 
-    def add(self, statement):
-        statement.scope = self
-        self.statements.append(statement)
-        return statement
+    def define(self, definition):
+         for _definition in self.definitions:
+            if _definition.name == definition.name:
+                raise Exception(definition.name + " is already defined in this scope")
+            else:
+                definition.scope = self
+                self.definitions.append(definition)
+
+    def pop(self):
+        global cS
+        if self.parent == NULL:
+            cS = rS
+        else:
+            cS = self.parent
+
+    def inScope(self, identifier):
+        for definition in self.definitions:
+            if definition.name == identifier:
+                return definition
+        if self.parent == NULL:
+            return NULL
+        else:
+            return self.parent.inScope(identifier)
 
 rS = Scope("", NULL)
+cS = rS
 
 def parseType():
     global i, t
@@ -43,8 +69,6 @@ def parseType():
     while t[i][1] not in [EQUAL, SEMICOLON, RIGHT_BRACKET, EOF]:
         curtype += t[i][0]
         i+=1
-    print(curtype)
-
 
 def parseMain():
     global i, t
@@ -58,9 +82,14 @@ def parseIdentifier():
     elif t[i][1] == "(":
         i+=1
         parseFunc()
-    elif t[i][1] == "|>":
-        i+=1
-        parsePipe()
+        # parse function arguments
+    else:
+        if cS.inScope(t[i-1][0]) == NULL:
+            raise Exception("Use of undeclared identifier " + t[i-1][0])
+        else:
+            if t[i][1] == "|>":
+                i+=1
+                parsePipe()
 
 
 def parseFunc():
@@ -92,4 +121,5 @@ if __name__ == "__main__":
     filename = sys.argv[1]
 
     t = get_tokens(filename)
+    print(t)
     parse()

@@ -1,6 +1,20 @@
 import csv
 import sys
-from generate import toks, EOF
+from generate import toks, EOF, non_tok_states
+
+
+all_toks = toks + non_tok_states
+
+def tokMap(token):
+    if token == "0":
+        return "int"
+    if token == "d.":
+        return "fl"
+    if token in all_toks:
+        return token
+    else:
+        return "id"
+
 
 # Read in the TSV file and construct the state machine
 state_machine = {}
@@ -10,6 +24,7 @@ with open('states.tsv', 'r') as f:
         key = row["states"]
         del row["states"]
         state_machine[key] = row
+
 
 
 # Define the function to apply the state machine to an input string
@@ -28,7 +43,7 @@ def recognize_tokens(input_string):
             current_state = next_state[:-3]
             continue
         elif "_++" in next_state:
-            tokens.append([string_buffer, current_state if current_state in toks else "id"])
+            tokens.append([string_buffer, tokMap(current_state)])
             string_buffer = ''
             current_state = next_state[:-3]
         else:
