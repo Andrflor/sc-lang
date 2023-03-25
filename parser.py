@@ -1,3 +1,4 @@
+from typing import OrderedDict
 from lexer import *
 from generate import *
 
@@ -9,14 +10,11 @@ primitives = [VOID, BOOL, CHAR, BYTE, U8, I8, F8, U16, I16,
               F16, GLYPH, U32, I32, F32, U64, I64, F64, SIZE,
               USIZE, TYPE, NULL ]
 
-operators = [ARROW, ASTERISK, COLON, SLASH, PLUS, MINUS,
-             AMPERSAND, VERTICAL_BAR, COMMA, CARET,
-             QUESTION_MARK, LOGICAL_NOT]
+operators = [ARROW, ASTERISK, COLON]
 
 params = []
 i = 0
 t = []
-
 
 class Type:
     def __init__(self, fr, to):
@@ -84,9 +82,44 @@ cS = rS
 
 def parseType():
     global i, t
-    curtype = ""
-    while t[i][1] not in [EQUAL, SEMICOLON, RIGHT_BRACKET, EOF]:
-        curtype += t[i][0]
+    type = Type(NULL, NULL)
+    baseType = OrderedDict()
+    j = 1
+    lastOperator = ASTERISK
+    key = ""
+    while t[i][1] not in [SEMICOLON, EOF]:
+        if t[i][1] in primitives:
+            pass
+            if key == "":
+                if lastOperator == ASTERISK:
+                    baseType[str(j)] = t[i][1]
+                    j+=1
+                    i+=1
+                else:
+                    # TODO: implement proper parsing here
+                    pass
+                continue
+            else:
+                if lastOperator != ASTERISK:
+                    raise Exception("Unexpected syntax")
+                baseType[key] = t[i][1]
+                key = ""
+                i+=1
+                continue
+
+        elif t[i][1] in operators:
+            pass
+        else:
+            identifier = cS.inScope(t[i][0])
+            if identifier == NULL:
+                if t[i+1][1] == COLON:
+                    key = t[i][0]
+                    i+=2
+                    continue
+                raise Exception("Use of undeclared identifier `" + t[i][0] + "`")
+            else:
+                if not identifier.isType:
+                    raise Exception("Identifier `"+ t[i][0] +  "` is not a defining a type.")
         i+=1
 
 def parseMain():
