@@ -1,6 +1,7 @@
 from typing import OrderedDict
 from lexer import *
 from generate import *
+import json
 
 
 IDENTIFIER = "id"
@@ -20,6 +21,10 @@ class Type:
     def __init__(self, fr, to):
         self.fr = fr
         self.to = to
+
+    def __repr__(self):
+        return f"Type(fr={self.fr}, to={self.to})"
+
 
     def get_isMapping(self):
         return self.fr != NULL
@@ -88,18 +93,16 @@ def parseType():
     key = ""
     while t[i][1] != EOF:
         if t[i][1] in primitives:
+            if lastOperator == ARROW:
+                type = Type(type.to, OrderedDict())
             if key == "":
-                if lastOperator == ASTERISK:
-                    type.to[str(j)] = t[i][1]
-                    j+=1
-                    i+=1
-                    continue
-                if lastOperator == ARROW:
-                    type = Type(type.to, OrderedDict())
-                    type.to[str(j)] = t[i][1]
-                    j+=1
-                    i+=1
-                    continue
+                type.to[str(j)] = t[i][1]
+                j+=1
+            else:
+                type.to[key] = t[i][1]
+                key = ""
+            i+=1
+            continue
         elif t[i][1] in [IDENTIFIER, PIDENTIFIER]:
             identifier = cS.inScope(t[i][0])
             if t[i+1][1] == COLON:
@@ -118,8 +121,8 @@ def parseType():
             else:
                 lastOperator = t[i][1]
         elif t[i][1] in [LEFT_CURLY_BRACE, EQUAL]:
-            pass
             # TODO: parse actual content and add it to scope
+            print(type)
         else:
             raise Exception("Unexpected token `" + t[i][0] + "`")
         i+=1
