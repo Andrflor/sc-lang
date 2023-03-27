@@ -18,7 +18,7 @@ t = []
 
 class Type:
     def __init__(self, fr, to):
-        self.fr=fr
+        self.fr = fr
         self.to = to
 
     def get_isMapping(self):
@@ -82,44 +82,46 @@ cS = rS
 
 def parseType():
     global i, t
-    type = Type(NULL, NULL)
-    baseType = OrderedDict()
+    type = Type(NULL, OrderedDict())
     j = 1
     lastOperator = ASTERISK
     key = ""
-    while t[i][1] not in [SEMICOLON, EOF]:
+    while t[i][1] != EOF:
         if t[i][1] in primitives:
-            pass
             if key == "":
                 if lastOperator == ASTERISK:
-                    baseType[str(j)] = t[i][1]
+                    type.to[str(j)] = t[i][1]
                     j+=1
                     i+=1
-                else:
-                    # TODO: implement proper parsing here
-                    pass
-                continue
-            else:
-                if lastOperator != ASTERISK:
-                    raise Exception("Unexpected syntax")
-                baseType[key] = t[i][1]
-                key = ""
-                i+=1
-                continue
-
-        elif t[i][1] in operators:
-            pass
-        else:
-            identifier = cS.inScope(t[i][0])
-            if identifier == NULL:
-                if t[i+1][1] == COLON:
-                    key = t[i][0]
-                    i+=2
                     continue
+                if lastOperator == ARROW:
+                    type = Type(type.to, OrderedDict())
+                    type.to[str(j)] = t[i][1]
+                    j+=1
+                    i+=1
+                    continue
+        elif t[i][1] in [IDENTIFIER, PIDENTIFIER]:
+            identifier = cS.inScope(t[i][0])
+            if t[i+1][1] == COLON:
+                key = t[i][0]
+                i+=2
+                continue
+            if identifier == NULL:
                 raise Exception("Use of undeclared identifier `" + t[i][0] + "`")
             else:
                 if not identifier.isType:
                     raise Exception("Identifier `"+ t[i][0] +  "` is not a defining a type.")
+        elif t[i][1] in operators:
+            if t[i][1] == COLON:
+                if key!= "":
+                    raise Exception("Unexpected syntax, colon must be used with name")
+            else:
+                lastOperator = t[i][1]
+        elif t[i][1] in [LEFT_CURLY_BRACE, EQUAL]:
+            pass
+            # TODO: parse actual content and add it to scope
+        else:
+            raise Exception("Unexpected token `" + t[i][0] + "`")
         i+=1
 
 def parseMain():
