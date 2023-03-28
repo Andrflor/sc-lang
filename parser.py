@@ -1,7 +1,6 @@
 from typing import OrderedDict
 from lexer import *
 from generate import *
-import json
 
 
 IDENTIFIER = "id"
@@ -25,7 +24,6 @@ class Type:
     def __repr__(self):
         return f"Type(fr={self.fr}, to={self.to})"
 
-
     def get_isMapping(self):
         return self.fr != NULL
 
@@ -41,8 +39,8 @@ class Type:
 
 class Definition:
     def __init__(self, name, type, value):
-        self.type = type
         self.name = name
+        self.type = type
         self.value = value
         self.scope = cS
 
@@ -55,6 +53,7 @@ class Scope:
 
     def push(self, name):
         scope = Scope(name, self)
+        cS = scope
         self.children.append(scope)
         return scope
 
@@ -85,7 +84,15 @@ class Scope:
 rS = Scope("", NULL)
 cS = rS
 
-def parseType():
+def defineOneLine(id, type):
+    print(id, type)
+
+def defineMultiLine(id, type):
+    cS.push(id)
+    parse()
+    cS.pop()
+
+def parseType(id=NULL):
     global i, t
     type = Type(NULL, OrderedDict())
     j = 1
@@ -120,22 +127,27 @@ def parseType():
                     raise Exception("Unexpected syntax, colon must be used with name")
             else:
                 lastOperator = t[i][1]
-        elif t[i][1] in [LEFT_CURLY_BRACE, EQUAL]:
-            # TODO: parse actual content and add it to scope
-            print(type)
+        elif t[i][1] == LEFT_CURLY_BRACE:
+            i+=1
+            break
+        elif t[i][1] == EQUAL:
+            i+=1
+            defineOneLine(id, type)
+            break
+        elif t[i][1] == SEMICOLON:
+            i+=1
+            defineMultiLine(id, type)
+            break
         else:
             raise Exception("Unexpected token `" + t[i][0] + "`")
         i+=1
-
-def parseMain():
-    global i, t
 
 def parseIdentifier():
     global i, t
     i+=1
     if t[i][1] == ":":
         i+=1
-        parseType()
+        parseType(t[i-2][0])
     elif t[i][1] == "(":
         i+=1
         parseFunc()
@@ -160,8 +172,6 @@ def parsePidentifier():
 
 def parse():
     global i, t
-    if t[i][1] == MAIN:
-        parseMain()
     if t[i][1] == IDENTIFIER:
         parseIdentifier()
     if t[i][1] == PIDENTIFIER:
