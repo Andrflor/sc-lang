@@ -85,12 +85,18 @@ rS = Scope("", NULL)
 cS = rS
 
 def defineOneLine(id, type):
-    print(id, type)
+    if type.isTypeMap:
+        pass
+    elif type.isType
+        pass
+    elif type.isMapping:
+        pass
+    else:
+        pass
 
 def defineMultiLine(id, type):
     cS.push(id)
     parse()
-    cS.pop()
 
 def parseType(id=NULL):
     global i, t
@@ -145,13 +151,12 @@ def parseType(id=NULL):
 def parseIdentifier():
     global i, t
     i+=1
-    if t[i][1] == ":":
+    if t[i][1] == COLON:
         i+=1
         parseType(t[i-2][0])
-    elif t[i][1] == "(":
+    elif t[i][1] == LEFT_PARENTHESIS:
         i+=1
-        parseFunc()
-        # parse function arguments
+        parseFunc(t[i-2][0])
     else:
         if cS.inScope(t[i-1][0]) == NULL:
             raise Exception("Use of undeclared identifier `" + t[i-1][0] + "`")
@@ -161,8 +166,20 @@ def parseIdentifier():
                 parsePipe()
 
 
-def parseFunc():
+def parseFunc(id=NULL):
     global i, t
+    arguments = []
+    while t[i][1] != RIGHT_PARENTHESIS:
+        if t[i][1] == UNDERSCORE:
+            pass
+        if t[i][1] == RANGE:
+            pass
+        if t[i][1] in [IDENTIFIER, PIDENTIFIER]:
+            if t[i][0] in arguments:
+                pass
+        if t[i][1] == COMMA:
+            pass
+    raise Exception("Unmatched parenthesis on function `" + id + "`")
 
 def parsePipe():
     global i, t
@@ -176,6 +193,10 @@ def parse():
         parseIdentifier()
     if t[i][1] == PIDENTIFIER:
         parsePidentifier()
+    if t[i][1] == RIGHT_CURLY_BRACE:
+        if cS == rS:
+            raise Exception("Trying to close a scope while in root scope")
+        cS.pop()
     i+=1
     if(i!=len(t)):
         parse()
