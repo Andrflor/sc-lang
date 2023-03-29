@@ -98,7 +98,7 @@ def defineMultiLine(id, type):
     cS.push(id)
     parse()
 
-def parseType(id=NULL):
+def parseType(id=NULL, arguments=NULL):
     global i, t
     type = Type(NULL, OrderedDict())
     j = 1
@@ -135,6 +135,7 @@ def parseType(id=NULL):
                 lastOperator = t[i][1]
         elif t[i][1] == LEFT_CURLY_BRACE:
             i+=1
+            defineMultiLine(id, type)
             break
         elif t[i][1] == EQUAL:
             i+=1
@@ -142,7 +143,6 @@ def parseType(id=NULL):
             break
         elif t[i][1] == SEMICOLON:
             i+=1
-            defineMultiLine(id, type)
             break
         else:
             raise Exception("Unexpected token `" + t[i][0] + "`")
@@ -168,7 +168,9 @@ def parseIdentifier():
 
 def parseFunc(id=NULL):
     global i, t
+    opened_par = 1
     arguments = []
+    cur = arguments
     while True:
         if t[i][1] == UNDERSCORE:
             pass
@@ -179,8 +181,16 @@ def parseFunc(id=NULL):
                 pass
         if t[i][1] == COMMA:
             pass
+        if t[i][1] == LEFT_PARENTHESIS:
+            opened_par +=1
         if t[i][1] == RIGHT_PARENTHESIS:
-            break
+            opened_par -=1
+            if opened_par == 0:
+                i+=1
+                if t[i][1] == COLON:
+                    i+=1
+                    parseType(id, arguments)
+                break
         else:
             raise Exception("Unmatched parenthesis on function `" + id + "`")
 
