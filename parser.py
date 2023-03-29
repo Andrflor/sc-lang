@@ -28,7 +28,7 @@ class Type:
         return self.fr != NULL
 
     def get_isType(self):
-        return self.to['1'] == TYPE and len(self.to) == 1
+        return len(self.to) == 1 and next(iter(self.to))
 
     def get_isTypeMap(self):
         return self.isType and self.isMapping
@@ -125,7 +125,7 @@ def parseType(id=NULL):
             if identifier == NULL:
                 raise Exception("Use of undeclared identifier `" + t[i][0] + "`")
             else:
-                if not identifier.isType:
+                if not identifier.type.isType:
                     raise Exception("Identifier `"+ t[i][0] +  "` is not a defining a type.")
         elif t[i][1] in operators:
             if t[i][1] == COLON:
@@ -169,7 +169,7 @@ def parseIdentifier():
 def parseFunc(id=NULL):
     global i, t
     arguments = []
-    while t[i][1] != RIGHT_PARENTHESIS:
+    while True:
         if t[i][1] == UNDERSCORE:
             pass
         if t[i][1] == RANGE:
@@ -179,7 +179,10 @@ def parseFunc(id=NULL):
                 pass
         if t[i][1] == COMMA:
             pass
-    raise Exception("Unmatched parenthesis on function `" + id + "`")
+        if t[i][1] == RIGHT_PARENTHESIS:
+            break
+        else:
+            raise Exception("Unmatched parenthesis on function `" + id + "`")
 
 def parsePipe():
     global i, t
