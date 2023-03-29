@@ -28,7 +28,7 @@ class Type:
         return self.fr != NULL
 
     def get_isType(self):
-        return self.to == TYPE
+        return self.to['1'] == TYPE and len(self.to) == 1
 
     def get_isTypeMap(self):
         return self.isType and self.isMapping
@@ -58,12 +58,11 @@ class Scope:
         return scope
 
     def define(self, definition):
-         for _definition in self.definitions:
+        for _definition in self.definitions:
             if _definition.name == definition.name:
                 raise Exception(definition.name + " is already defined in this scope")
-            else:
-                definition.scope = self
-                self.definitions.append(definition)
+        definition.scope = self
+        self.definitions.append(definition)
 
     def pop(self):
         global cS
@@ -85,10 +84,11 @@ rS = Scope("", NULL)
 cS = rS
 
 def defineOneLine(id, type):
+    definition = Definition(id, type, NULL)
     if type.isTypeMap:
         pass
-    elif type.isType
-        pass
+    elif type.isType:
+        cS.define(definition)
     elif type.isMapping:
         pass
     else:
