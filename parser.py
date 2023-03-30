@@ -52,6 +52,7 @@ class Scope:
         self.definitions = []
 
     def push(self, name):
+        global cS
         scope = Scope(name, self)
         cS = scope
         self.children.append(scope)
@@ -133,6 +134,9 @@ def parseType(id=NULL, arguments=NULL):
                     raise Exception("Unexpected syntax, colon must be used with name")
             else:
                 lastOperator = t[i][1]
+        elif t[i][1] == CARET:
+            i+=1
+            pass
         elif t[i][1] == LEFT_CURLY_BRACE:
             i+=1
             defineMultiLine(id, type)
@@ -172,18 +176,15 @@ def parseFunc(id=NULL):
     arguments = []
     cur = arguments
     while True:
-        if t[i][1] == UNDERSCORE:
-            pass
-        if t[i][1] == RANGE:
-            pass
-        if t[i][1] in [IDENTIFIER, PIDENTIFIER]:
-            if t[i][0] in arguments:
-                pass
-        if t[i][1] == COMMA:
-            pass
-        if t[i][1] == LEFT_PARENTHESIS:
+        if t[i][1] in [IDENTIFIER, PIDENTIFIER, UNDERSCORE, RANGE]:
+            cur.append(t[i][0])
+        elif t[i][1] == COMMA:
+            break
+        elif t[i][1] == LEFT_PARENTHESIS:
             opened_par +=1
-        if t[i][1] == RIGHT_PARENTHESIS:
+            cur = []
+            arguments.append(cur)
+        elif t[i][1] == RIGHT_PARENTHESIS:
             opened_par -=1
             if opened_par == 0:
                 i+=1
@@ -193,6 +194,7 @@ def parseFunc(id=NULL):
                 break
         else:
             raise Exception("Unmatched parenthesis on function `" + id + "`")
+        i+=1
 
 def parsePipe():
     global i, t
