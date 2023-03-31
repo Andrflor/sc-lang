@@ -2,9 +2,15 @@ from typing import OrderedDict
 from lexer import *
 from generate import *
 
-
 IDENTIFIER = "id"
 PIDENTIFIER = "pid"
+
+def flatten(lst):
+    if not lst:
+        return lst
+    if isinstance(lst[0], list):
+        return flatten(lst[0]) + flatten(lst[1:])
+    return lst[:1] + flatten(lst[1:])
 
 primitives = [VOID, BOOL, CHAR, BYTE, U8, I8, F8, U16, I16,
               F16, GLYPH, U32, I32, F32, U64, I64, F64, SIZE,
@@ -99,8 +105,16 @@ def defineMultiLine(id, type):
     cS.push(id)
     parse()
 
-def parseType(id=NULL, arguments=NULL):
+def parseType(id=NULL, arguments=[]):
     global i, t
+    if len(arguments) > 0:
+        flat = flatten(arguments)
+        if UNDERSCORE in flat:
+            flat.remove(UNDERSCORE)
+        if RANGE in flat:
+            flat.remove(RANGE)
+        if flat != list(set(flat)):
+            raise Exception("The arguments for `" +  id + "` function have duplicate names")
     type = Type(NULL, OrderedDict())
     j = 1
     lastOperator = ASTERISK
@@ -116,6 +130,7 @@ def parseType(id=NULL, arguments=NULL):
                 type.to[key] = t[i][1]
                 key = ""
             i+=1
+            print(type, t[i][1])
             continue
         elif t[i][1] in [IDENTIFIER, PIDENTIFIER]:
             identifier = cS.inScope(t[i][0])
@@ -136,12 +151,16 @@ def parseType(id=NULL, arguments=NULL):
                 lastOperator = t[i][1]
         elif t[i][1] == CARET:
             i+=1
-            pass
+            continue
         elif t[i][1] == LEFT_CURLY_BRACE:
+            if(type.fr == NULL and len(arguments) > 0):
+                raise Exception("Arguments in variable definition without mapping signature")
             i+=1
             defineMultiLine(id, type)
             break
         elif t[i][1] == EQUAL:
+            if(type.fr == NULL and len(arguments) > 0):
+                raise Exception("Arguments in variable definition without mapping signature")
             i+=1
             defineOneLine(id, type)
             break
