@@ -105,6 +105,19 @@ def defineMultiLine(id, type):
     cS.push(id)
     parse()
 
+def parseArgs(args, type):
+    if isinstance(args, list):
+        if len(args) == 1:
+            parseArgs(args[0], type)
+        else:
+            if not isinstance(type, OrderedDict):
+                raise Exception("Multiple parameters declared with only one type")
+            else:
+                pass
+                # TODO parse proper arguments with proper type
+    else:
+        cS.define(Definition(args, type, NULL))
+
 def parseType(id=NULL, arguments=[]):
     global i, t
     if len(arguments) > 0:
@@ -156,12 +169,18 @@ def parseType(id=NULL, arguments=[]):
             if(type.fr == NULL and len(arguments) > 0):
                 raise Exception("Arguments in variable definition without mapping signature")
             i+=1
+            if len(arguments) > 0:
+                # TODO: need to push proper scope
+                parseArgs(arguments, type.fr)
             defineMultiLine(id, type)
             break
         elif t[i][1] == EQUAL:
             if(type.fr == NULL and len(arguments) > 0):
                 raise Exception("Arguments in variable definition without mapping signature")
             i+=1
+            if len(arguments) > 0:
+                # TODO: need to push proper scope
+                parseArgs(arguments, type.fr)
             defineOneLine(id, type)
             break
         elif t[i][1] == SEMICOLON:
