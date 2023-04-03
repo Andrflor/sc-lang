@@ -91,6 +91,7 @@ rS = Scope("", NULL)
 cS = rS
 
 def defineOneLine(id, type):
+    # TODO: parse content of the one line declaration
     definition = Definition(id, type, NULL)
     if type.isTypeMap:
         pass
@@ -102,7 +103,8 @@ def defineOneLine(id, type):
         pass
 
 def defineMultiLine(id, type):
-    cS.push(id)
+    definition = Definition(id, type, NULL)
+    # TODO: parse content of the multi line declaration
     parse()
 
 def parseArgs(args, type):
@@ -169,8 +171,8 @@ def parseType(id=NULL, arguments=[]):
             if(type.fr == NULL and len(arguments) > 0):
                 raise Exception("Arguments in variable definition without mapping signature")
             i+=1
+            cS.push(id)
             if len(arguments) > 0:
-                # TODO: need to push proper scope
                 parseArgs(arguments, type.fr)
             defineMultiLine(id, type)
             break
@@ -179,9 +181,12 @@ def parseType(id=NULL, arguments=[]):
                 raise Exception("Arguments in variable definition without mapping signature")
             i+=1
             if len(arguments) > 0:
-                # TODO: need to push proper scope
+                cS.push(id)
                 parseArgs(arguments, type.fr)
-            defineOneLine(id, type)
+                defineOneLine(id, type)
+                cS.pop()
+            else:
+                defineOneLine(id, type)
             break
         elif t[i][1] == SEMICOLON:
             i+=1
