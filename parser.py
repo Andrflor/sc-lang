@@ -104,8 +104,7 @@ def defineOneLine(id, type):
 
 def defineMultiLine(id, type):
     definition = Definition(id, type, NULL)
-    # TODO: parse content of the multi line declaration
-    parse()
+    parseMultiple()
 
 def parseArgs(args, type):
     if isinstance(args, list):
@@ -255,6 +254,10 @@ def parse():
         if cS == rS:
             raise Exception("Trying to close a scope while in root scope")
         cS.pop()
+
+def parseMultiple():
+    global i, t
+    parse()
     i+=1
     if(i!=len(t)):
         parse()
@@ -268,7 +271,7 @@ if __name__ == "__main__":
 
     t = get_tokens(filename)
     try:
-        parse()
+        parseMultiple()
     except Exception as e:
         print("Error:", e)
 

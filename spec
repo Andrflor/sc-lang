@@ -39,8 +39,8 @@ Syntact programing language features overview
 Very simple hello world:
   main: void -> void = println("Hello world");
 
-As you can see a Syntact program use a main function as it's enty point
-The function is define with a type void -> void, meaning that it goes from void to void
+As you can see a Syntact program use a main function as it's entry point
+The function is defined with a type void -> void, meaning that it goes from void to void
 Because it's coming from void you don't need parenthesis, and because the function is a single line you can use = instread of {
 More on that later
 
@@ -107,7 +107,7 @@ To define any new data (or new variable in other programing languages)
 
   This can be particulary useful when implicit return cannot work because of control-flow for example
   In syntact functions and types are first class citizens
-  And the syntax is the consistant same no matter what you want to define
+  And the syntax is the consistent same no matter what you want to define
 
   You may want to define mutable data
   you can use the keyword mut to do so
