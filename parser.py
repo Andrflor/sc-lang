@@ -48,7 +48,6 @@ class Definition:
         self.name = name
         self.type = type
         self.value = value
-        self.scope = cS
 
 class Scope:
     def __init__(self, name, parent):
@@ -87,22 +86,25 @@ class Scope:
         else:
             return self.parent.inScope(identifier)
 
+definition = NULL
 rS = Scope("", NULL)
 cS = rS
 
+
 def defineOneLine(id, type):
-    # TODO: parse content of the one line declaration
+    global definition, cS
     definition = Definition(id, type, NULL)
     if type.isTypeMap:
-        pass
+        cS.defineTypeMap(definition)
     elif type.isType:
-        cS.define(definition)
+        cS.defineType(definition)
     elif type.isMapping:
-        pass
+        cS.defineMapping(definition)
     else:
-        pass
+        cS.defineVariable(definition)
 
 def defineMultiLine(id, type):
+    global definition
     definition = Definition(id, type, NULL)
     parseMultiple()
 
