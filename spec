@@ -3,14 +3,14 @@ TODO: document autofree
 TODO: better control-flow example
 TODO: add a bit better explanation to |> operator
 
-The journey to create Syntact began with a deep sense of disappointment about the state of modern programming.
+The journey to create Syntact began with a deep sense of disappointment about the state current of programming.
 We put a lot of effort into creating encapsulations, but then we end up writing a lot of code just to get around them, and it feels like there's no real purpose to them.
 With all the technological advancements we have, we should be able to create applications that run incredibly fast and smoothly, but instead, we're constantly dealing with frustratingly slow programs and artificial boundaries imposed by frameworks upon frameworks.
 It's clear that the current programming languages are inadequate, and we need to develop new ones that prioritize both expressiveness and high-order programming capabilities without compromising performance.
 That's why I believe that Syntact is a step in the right direction, with its emphasis on flexibility, efficiency, and simplicity, making it a more powerful tool for developers to create expressive and efficient code.
 
 The current state of programming languages is inadequate in terms of expressiveness and high-order programming capabilities.
-Despite incorporating genericity, most languages require an excessive amount of boilerplate code for simple memory operations and fail to match C's level of performance while restricting the extent of genericity.
+Despite incorporating genericity, most languages require an excessive amount of boilerplate code for simple memory operations and fail to match C's level of performance while still restricting the extent of genericity.
 Although some languages attempt to address these issues with zero cost abstraction ownership systems like Rust, they end up with narrow and constrained syntax and ultra-slow compile time.
 On the other hand, others rely on garbage collection, which incurs a hidden performance cost.
 Therefore, there is a need to develop a new language that meets these requirements without compromising performance.
@@ -19,7 +19,7 @@ At its core, Syntact is built around the idea that programming is simply the act
 In this sense, functions and types are themselves just data that can be manipulated like any other.
 Syntact leverages this fundamental concept by providing a type algebra that allows developers to easily compose complex types using operators.
 By treating functions and types as data that can be freely manipulated, Syntact provides developers with a more flexible and powerful toolset for creating expressive and efficient code.
-By emphasizing a functional programming style and avoiding the need for classes, Syntact helps developers to create more readable and maintainable code that is easier to reason about.
+By emphasizing a functional programming style and removing the need for classes, Syntact helps developers to create more readable and maintainable code that is easier to reason about.
 
 Moreover, Syntact's efficiency and simplicity are enhanced by its use of autofree memory management, which eliminates the need for garbage collection. (See the autofree section for more details)
 Additionally, the language is efficiently compiled to C89, making it highly portable and compatible with a wide range of platforms.
@@ -78,7 +78,7 @@ This choice is due to the fact that unless specified data is immutable by defaul
 Calling immutable data "a variable" makes no sense
 Everything that exist in syntact is refered as data
 
-To define any new data (or new variable in other programing languages)
+To define any new data (or new variable in classical programing language terminology)
   You can use equal sign
     data_name: data_type = data_value;
 
@@ -92,10 +92,10 @@ To define any new data (or new variable in other programing languages)
         data_value
     }
 
-  As you can see i used // to define a comment
+  As you can see I used // to define a comment
   Multiline comments are also suported with /* multiline comment */
 
-  Using curly brase is well suited when you have a lot of operations to de before assignement
+  Using curly brace is well suited when you have a lot of operations to de before assignement
   Especially if you want to create variable that belong to that particular scope
   It's also well suited to define functions with multiple instructions
 
@@ -116,12 +116,6 @@ To define any new data (or new variable in other programing languages)
 
   This will allow you to modify the data
   Otherwhise you will not be able to make any modifications
-
-In programing any type that you manipulate is nothing more than the composition of particular type
-most programming language offert you various syntaxes to achieve particular compositions
-In syntact you don't need those special declarations and keywords like function, enum, typedef, struct, class...
-To achieve type composition Syntact rely solely on type algebra
-The idea of type algebra is that type is data and like any other data you can compose types using operators
 
 In programming, every type that you work with is essentially a combination of the primitive types.
 Programming languages provide various syntaxes to accomplish these combinations.
