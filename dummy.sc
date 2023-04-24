@@ -96,3 +96,19 @@ type1: type = u8 * value: i32 * count: i32;
 type2: type = f32 * count: i32 * double;
 
 data: type = type1 & type2; // count: i32;
+
+fizbuzz(i): int -> String^i = ..i, _fizbuzz |> map;
+
+_fizbuzz(i): int -> String {
+  fizz: String = ""
+  if(i%3==0) {
+    fizz += "Fizz"
+  }
+  if(i%5==0) {
+    fizz += "buzz"
+  }
+  return fizz == "" ? String(i) : fizz;
+}
+
+flatten(str): String^ -> String =
+  str |> reduce((p, n): String * String -> String = p + "\n" + n);
