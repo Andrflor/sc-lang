@@ -1,0 +1,7 @@
+<definition> ::= <mut>? <identifier> : <type> = <statement>;
+
+<assignation> ::= = <statement>;
+<scope> ::= { <statement>;+ }
+
+
+<type> ::= <>
