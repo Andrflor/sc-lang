@@ -35,6 +35,7 @@ Syntact programing language features overview
   - Manage memory at compile time using autofree
   - Algebraic data types to express type structure
   - Type safe structural typing for maximum flexibility and genericity
+  - All abstractions comes are 0 cost
 
 Very simple hello world:
   main: void -> void = println("Hello world");
